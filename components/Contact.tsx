@@ -1,90 +1,66 @@
-"use client";
+"use client"
 
-import { useState, useEffect, ChangeEvent } from "react";
-import { useSpring, animated, config } from "@react-spring/web";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
-import { Mail, Phone, MapPin } from "lucide-react";
-import emailjs from "@emailjs/browser";
+import { useState } from "react"
+import { useSpring, animated, config } from "@react-spring/web"
+import { Button } from "./ui/button"
+import { Input } from "./ui/input"
+import { Textarea } from "./ui/textarea"
+import { Mail, Phone, MapPin } from "lucide-react"
+import emailjs from "@emailjs/browser"
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     message: "",
-  });
+  })
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState(null)
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsSubmitting(true)
 
     try {
-      await emailjs.send(
-        "YOUR_SERVICE_ID",
-        "YOUR_TEMPLATE_ID",
-        formData,
-        "YOUR_USER_ID"
-      );
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      await emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", formData, "YOUR_USER_ID")
+      setSubmitStatus("success")
+      setFormData({ name: "", email: "", message: "" })
     } catch (error) {
-      setSubmitStatus("error");
+      setSubmitStatus("error")
     }
 
-    setIsSubmitting(false);
-  };
+    setIsSubmitting(false)
+  }
 
-  const [fadeIn, setFadeIn] = useSpring(() => ({
-    opacity: 0,
-    transform: "translateY(50px)",
+  const fadeIn = useSpring({
+    from: { opacity: 0, transform: "translateY(50px)" },
+    to: { opacity: 1, transform: "translateY(0)" },
     config: config.molasses,
-  }));
+  })
 
-  const [formAnimation, setFormAnimation] = useSpring(() => ({
-    opacity: 0,
-    transform: "scale(0.9)",
+  const formAnimation = useSpring({
+    from: { opacity: 0, transform: "scale(0.9)" },
+    to: { opacity: 1, transform: "scale(1)" },
     config: config.wobbly,
-  }));
-
-  useEffect(() => {
-    setFadeIn({ opacity: 1, transform: "translateY(0)" });
-    setFormAnimation({ opacity: 1, transform: "scale(1)" });
-  }, [setFadeIn, setFormAnimation]);
+  })
 
   return (
     <section id="contact" className="py-20 bg-gray-100 dark:bg-gray-900">
       <div className="container mx-auto px-4">
-        <animated.h2
-          style={fadeIn}
-          className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white"
-        >
+        <animated.h2 style={fadeIn} className="text-3xl font-bold mb-8 text-center text-gray-800 dark:text-white">
           Let's Connect
         </animated.h2>
-        <animated.p
-          style={fadeIn}
-          className="text-center text-gray-600 dark:text-gray-300 mb-12"
-        >
-          I'm always open to new opportunities and collaborations. Feel free to
-          reach out!
+        <animated.p style={fadeIn} className="text-center text-gray-600 dark:text-gray-300 mb-12">
+          I'm always open to new opportunities and collaborations. Feel free to reach out!
         </animated.p>
-        <animated.div
-          style={fadeIn}
-          className="grid grid-cols-1 md:grid-cols-2 gap-8"
-        >
+        <animated.div style={fadeIn} className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">
-              Get in Touch
-            </h3>
+            <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Get in Touch</h3>
             <div className="space-y-4">
               <p className="flex items-center text-gray-600 dark:text-gray-300">
                 <Mail className="mr-2" /> hamzaraoa010@gmail.com
@@ -97,11 +73,7 @@ const Contact = () => {
               </p>
             </div>
           </div>
-          <animated.form
-            onSubmit={handleSubmit}
-            className="space-y-4"
-            style={formAnimation}
-          >
+          <animated.form onSubmit={handleSubmit} className="space-y-4" style={formAnimation}>
             <Input
               type="text"
               name="name"
@@ -135,20 +107,14 @@ const Contact = () => {
             >
               {isSubmitting ? "Sending..." : "Send Message"}
             </Button>
-            {submitStatus === "success" && (
-              <p className="text-green-500">Message sent successfully!</p>
-            )}
-            {submitStatus === "error" && (
-              <p className="text-red-500">
-                Failed to send message. Please try again.
-              </p>
-            )}
+            {submitStatus === "success" && <p className="text-green-500">Message sent successfully!</p>}
+            {submitStatus === "error" && <p className="text-red-500">Failed to send message. Please try again.</p>}
           </animated.form>
         </animated.div>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Contact;
+export default Contact
 

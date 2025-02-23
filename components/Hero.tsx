@@ -1,44 +1,35 @@
 "use client"
 
 import { useSpring, animated, config } from "@react-spring/web"
-import { useEffect } from "react"
 import { Button } from "./ui/button"
 import Image from "next/image"
-import PFP from "@/public/pfp.jpg"
 
 const Hero = () => {
-  const [fadeIn, setFadeIn] = useSpring(() => ({
-    opacity: 0,
-    transform: "translateY(50px)",
+  const fadeIn = useSpring({
+    from: { opacity: 0, transform: "translateY(50px)" },
+    to: { opacity: 1, transform: "translateY(0)" },
     config: config.molasses,
-  }))
+  })
 
-  const [imageSpring, setImageSpring] = useSpring(() => ({
-    opacity: 0,
-    transform: "scale(0.8) rotate(-10deg)",
+  const imageSpring = useSpring({
+    from: { opacity: 0, transform: "scale(0.8) rotate(-10deg)" },
+    to: { opacity: 1, transform: "scale(1) rotate(0deg)" },
     config: config.wobbly,
-  }))
+  })
 
-  const [titleProps, setTitleProps] = useSpring(() => ({
-    opacity: 0,
-    transform: "translateX(-50px)",
+  const titleProps = useSpring({
+    from: { opacity: 0, transform: "translateX(-50px)" },
+    to: { opacity: 1, transform: "translateX(0)" },
     config: config.molasses,
     delay: 300,
-  }))
+  })
 
-  const [subtitleProps, setSubtitleProps] = useSpring(() => ({
-    opacity: 0,
-    transform: "translateX(50px)",
+  const subtitleProps = useSpring({
+    from: { opacity: 0, transform: "translateX(50px)" },
+    to: { opacity: 1, transform: "translateX(0)" },
     config: config.molasses,
     delay: 600,
-  }))
-
-  useEffect(() => {
-    setFadeIn({ opacity: 1, transform: "translateY(0)" })
-    setImageSpring({ opacity: 1, transform: "scale(1) rotate(0deg)" })
-    setTitleProps({ opacity: 1, transform: "translateX(0)" })
-    setSubtitleProps({ opacity: 1, transform: "translateX(0)" })
-  }, [setFadeIn, setImageSpring, setTitleProps, setSubtitleProps])
+  })
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-purple-600 text-white overflow-hidden">
@@ -61,7 +52,7 @@ const Hero = () => {
         <animated.div style={imageSpring} className="md:w-1/2 flex justify-center">
           <div className="relative w-64 h-64 md:w-96 md:h-96">
             <Image
-              src={PFP}
+              src="/your-image-url.jpg"
               alt="Ali Hamza Rao"
               layout="fill"
               objectFit="cover"
