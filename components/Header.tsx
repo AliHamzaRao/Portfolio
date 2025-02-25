@@ -1,36 +1,38 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { useSpring, animated, config } from "@react-spring/web"
-import { Menu, Moon, Sun } from "lucide-react"
-import { Button } from "./ui/button"
-import { useTheme } from "next-themes"
+import { useProfile } from "@/contexts/ProfileContext";
+import { animated, config, useSpring } from "@react-spring/web";
+import { Menu, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { Button } from "./ui/button";
 
 const Header = () => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { profile } = useProfile();
 
-  useEffect(() => setMounted(true), [])
+  useEffect(() => setMounted(true), []);
 
   const headerSpring = useSpring({
     from: { opacity: 0, y: -50 },
     to: { opacity: 1, y: 0 },
     config: config.wobbly,
-  })
+  });
 
   const menuAnimation = useSpring({
     transform: isOpen ? "translateX(0%)" : "translateX(-100%)",
     config: config.stiff,
-  })
+  });
 
   const logoProps = useSpring({
     from: { opacity: 0, transform: "scale(0.5)" },
     to: { opacity: 1, transform: "scale(1)" },
     config: config.molasses,
-  })
+  });
 
-  if (!mounted) return null
+  if (!mounted) return null;
 
   return (
     <animated.header
@@ -42,7 +44,7 @@ const Header = () => {
           style={logoProps}
           className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600"
         >
-          Ali Hamza Rao
+          {profile?.name || "Loading..."}
         </animated.h1>
         <div className="flex items-center space-x-4">
           <nav className="hidden md:flex space-x-4">
@@ -58,7 +60,11 @@ const Header = () => {
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             className="text-gray-800 dark:text-white"
           >
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {theme === "dark" ? (
+              <Sun className="h-5 w-5" />
+            ) : (
+              <Moon className="h-5 w-5" />
+            )}
           </Button>
           <Button
             variant="ghost"
@@ -93,17 +99,17 @@ const Header = () => {
         </div>
       </animated.nav>
     </animated.header>
-  )
-}
+  );
+};
 
 const NavItem = ({ href, children, onClick }) => {
-  const [isHovered, setIsHovered] = useState(false)
+  const [isHovered, setIsHovered] = useState(false);
 
   const springProps = useSpring({
     transform: isHovered ? "translateY(-2px)" : "translateY(0px)",
     color: isHovered ? "#3B82F6" : "#4B5563",
     config: config.wobbly,
-  })
+  });
 
   return (
     <animated.a
@@ -116,8 +122,8 @@ const NavItem = ({ href, children, onClick }) => {
     >
       {children}
     </animated.a>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
 

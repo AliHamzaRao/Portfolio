@@ -1,35 +1,29 @@
-import "./globals.css"
-import { Inter } from "next/font/google"
-import { ThemeProvider } from "@/components/theme-provider"
-import { SessionProvider } from "@/components/providers/SessionProvider"
-import type React from "react" // Added import for React
+import { Providers } from "@/components/providers/Providers";
+import { ProfileProvider } from "@/contexts/ProfileContext";
+import { Inter } from "next/font/google";
+import type React from "react";
+import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Ali Hamza Rao - Senior Software Engineer",
-  description: "Portfolio of Ali Hamza Rao, a Senior Software Engineer specializing in frontend development.",
-    generator: 'v0.dev'
-}
+  title: "Portfolio",
+  description: "Personal Portfolio Website",
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <SessionProvider>
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            {children}
-          </ThemeProvider>
-        </SessionProvider>
+        <Providers>
+          <ProfileProvider>{children}</ProfileProvider>
+        </Providers>
       </body>
     </html>
-  )
+  );
 }
 
-
-
-import './globals.css'
