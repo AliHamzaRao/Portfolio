@@ -1,10 +1,10 @@
 "use client";
 
-import type React from "react";
-
 import { Button } from "@/components/ui/button";
+import { upload } from "@vercel/blob/client";
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
+import type React from "react";
 import { useCallback, useState } from "react";
 
 interface ImageUploadProps {
@@ -27,20 +27,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         const file = e.target.files?.[0];
         if (!file) return;
 
-        const formData = new FormData();
-        formData.append("file", file);
-
-        const response = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
+        // Upload to Vercel Blob
+        const blob = await upload(file.name, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
         });
 
-        if (!response.ok) {
-          throw new Error("Upload failed");
-        }
-
-        const data = await response.json();
-        onChange(data.url);
+        onChange(blob.url);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {
@@ -60,7 +53,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           disabled={loading}
         >
           <ImagePlus className="h-4 w-4 mr-2" />
-          Upload Image
+          {loading ? "Uploading..." : "Upload Image"}
         </Button>
         <input
           id="imageUpload"
@@ -89,6 +82,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               alt="Upload"
               className="object-cover"
               fill
+              sizes="(max-width: 768px) 100px, 200px"
             />
           </div>
         ))}

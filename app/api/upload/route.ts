@@ -1,40 +1,42 @@
-import { existsSync } from "fs"
-import { mkdir, writeFile } from "fs/promises"
+import { put } from "@vercel/blob"
+import { handleUpload } from "@vercel/blob/client"
 import { NextResponse } from "next/server"
-import { join } from "path"
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
+    const body = await request.json()
+
     try {
-        const formData = await request.formData()
-        const file = formData.get("file") as File
-        if (!file) {
-            return NextResponse.json({ error: "No file uploaded" }, { status: 400 })
-        }
+        const jsonResponse = await handleUpload({
+            body,
+            request,
+            onBeforeGenerateToken: async (pathname) => {
+                // Check authentication if needed
+                return {
+                    allowedContentTypes: ["image/jpeg", "image/png", "image/gif"],
+                    maximumSizeInBytes: 5 * 1024 * 1024, // 5MB
+                }
+            },
+            onUploadCompleted: async ({ blob }) => {
+                // You can store the blob URL in your database here if needed
+                console.log("Upload completed", blob)
+            },
+        })
 
-        const bytes = await file.arrayBuffer()
-        const buffer = Buffer.from(bytes)
-
-        // Create unique filename
-        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`
-        const filename = `${uniqueSuffix}-${file.name}`
-
-        // Ensure uploads directory exists
-        const uploadDir = join(process.cwd(), "public", "uploads")
-        if (!existsSync(uploadDir)) {
-            await mkdir(uploadDir, { recursive: true })
-        }
-
-        // Save to public/uploads directory
-        const path = join(uploadDir, filename)
-        await writeFile(path, buffer)
-
-        // Return the URL
-        const url = `/uploads/${filename}`
-
-        return NextResponse.json({ url })
+        return NextResponse.json(jsonResponse)
     } catch (error) {
-        console.error("Error uploading file:", error)
-        return NextResponse.json({ error: "Error uploading file" }, { status: 500 })
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : "Error uploading file" },
+            { status: 400 },
+        )
     }
+}
+
+// Handle PUT requests from the Vercel Blob client
+export async function PUT(request: Request): Promise<NextResponse> {
+    const blob = await put(request.url, request, {
+        access: "public",
+    })
+
+    return NextResponse.json(blob)
 }
 
