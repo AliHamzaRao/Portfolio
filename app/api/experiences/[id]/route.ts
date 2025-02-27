@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server"
 import dbConnect from "@/lib/mongodb"
 import Experience from "@/models/Experience"
+import { NextResponse } from "next/server"
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {

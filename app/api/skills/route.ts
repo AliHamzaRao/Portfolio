@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server"
 import dbConnect from "@/lib/mongodb"
 import Skill from "@/models/Skill"
+import { NextResponse } from "next/server"
 
 export async function GET() {
   try {
