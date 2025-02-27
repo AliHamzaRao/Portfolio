@@ -1,4 +1,4 @@
-# env
+# environment variable
 *.env
 
 # Dependencies
