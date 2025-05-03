@@ -22,6 +22,8 @@ interface Profile {
     url: string;
     icon: string;
   }>;
+  resumeUrl: string;
+  resumeName: string;
 }
 
 interface ProfileContextType {

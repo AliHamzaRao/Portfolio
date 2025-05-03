@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { ProjectForm } from "@/components/admin/forms/ProjectForm"
+import ProjectForm from "@/components/admin/forms/ProjectForm"
 
 export default function EditProjectPage({ params }: { params: { id: string } }) {
   const [project, setProject] = useState(null)

@@ -5,12 +5,13 @@ import Skills from "../components/Skills"
 import Experience from "../components/Experience"
 import Projects from "../components/Projects"
 import Education from "../components/Education"
+import Testimonials from "../components/Testimonials"
 import Contact from "../components/Contact"
 import Footer from "../components/Footer"
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-800">
+    <main className="min-h-screen bg-slate-900 text-white">
       <Header />
       <Hero />
       <About />
@@ -18,9 +19,9 @@ export default function Home() {
       <Experience />
       <Projects />
       <Education />
+      <Testimonials />
       <Contact />
       <Footer />
     </main>
   )
 }
-
