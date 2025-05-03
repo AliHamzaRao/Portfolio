@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 import AdminLayout from "@/components/admin/AdminLayout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,7 @@ export default function ResumePage() {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Fetch existing resume on component mount
-  useState(() => {
+  useEffect(() => {
     const fetchResume = async () => {
       try {
         const response = await fetch("/api/resume/info")
@@ -34,9 +34,9 @@ export default function ResumePage() {
         console.error("Error fetching resume info:", error)
       }
     }
-
+  
     fetchResume()
-  })
+  }, [])
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

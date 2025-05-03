@@ -2,238 +2,193 @@
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
-import { useToast } from "@/components/ui/use-toast"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ImageUpload } from "@/components/ui/image-upload"
-import { X, Plus, Loader2 } from "lucide-react"
-
-interface Project {
-  _id?: string
-  title: string
-  description: string
-  technologies: string[]
-  images: string[]
-  githubUrl?: string
-  liveUrl?: string
-}
+import { X } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface ProjectFormProps {
-  projectId?: string
-  initialData?: Project
-  onSubmit: (data: Project) => Promise<void> // Add this line
+  initialData?: any
+  onSubmit: (data: any) => Promise<void>
+  isSubmitting?: boolean
 }
 
-export default function ProjectForm({ projectId, initialData, onSubmit }: ProjectFormProps) {
-  const [project, setProject] = useState<Project>(
-    initialData || {
-      title: "",
-      description: "",
-      technologies: [],
-      images: [],
-      githubUrl: "",
-      liveUrl: "",
-    }
-  )
-  const [loading, setLoading] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [newTechnology, setNewTechnology] = useState("")
-  const router = useRouter()
+export function ProjectForm({ initialData, onSubmit, isSubmitting = false }: ProjectFormProps) {
   const { toast } = useToast()
+  const [formData, setFormData] = useState({
+    title: initialData?.title || "",
+    shortDescription: initialData?.shortDescription || "",
+    fullDescription: initialData?.fullDescription || "",
+    technologies: initialData?.technologies || [],
+    images: initialData?.images || [],
+    liveUrl: initialData?.liveUrl || "",
+    githubUrl: initialData?.githubUrl || "",
+    order: initialData?.order || 0,
+  })
 
-  useEffect(() => {
-    if (projectId && !initialData) {
-      const fetchProject = async () => {
-        setLoading(true)
-        try {
-          const response = await fetch(`/api/projects/${projectId}`)
-          if (!response.ok) throw new Error("Failed to fetch project")
-          const data = await response.json()
-          setProject(data)
-        } catch (error) {
-          console.error("Error fetching project:", error)
-          toast({
-            title: "Error",
-            description: "Failed to load project data",
-            variant: "destructive",
-          })
-        } finally {
-          setLoading(false)
-        }
-      }
-
-      fetchProject()
-    }
-  }, [projectId, initialData, toast])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setProject((prev) => ({ ...prev, [name]: value }))
-  }
-
-  const handleAddTechnology = () => {
-    if (newTechnology.trim() !== "") {
-      setProject((prev) => ({
-        ...prev,
-        technologies: [...prev.technologies, newTechnology.trim()],
-      }))
-      setNewTechnology("")
-    }
-  }
-
-  const handleRemoveTechnology = (index: number) => {
-    setProject((prev) => ({
-      ...prev,
-      technologies: prev.technologies.filter((_, i) => i !== index),
-    }))
-  }
-
-  const handleImagesChange = (url: string) => {
-    setProject((prev) => ({ ...prev, images: [...prev.images, url] }))
-  }
+  const [newTechnology, setNewTechnology] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setSubmitting(true)
-
     try {
-      const url = projectId ? `/api/projects/${projectId}` : "/api/projects"
-      const method = projectId ? "PUT" : "POST"
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(project),
-      })
-
-      if (!response.ok) throw new Error("Failed to save project")
-
+      await onSubmit(formData)
       toast({
         title: "Success",
-        description: `Project ${projectId ? "updated" : "created"} successfully`,
+        description: "Project saved successfully",
       })
-
-      router.push("/admin/projects")
-      router.refresh()
     } catch (error) {
-      console.error("Error saving project:", error)
+      console.error("Error submitting form:", error)
       toast({
         title: "Error",
         description: "Failed to save project",
         variant: "destructive",
       })
-    } finally {
-      setSubmitting(false)
     }
   }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    )
+  const addTechnology = () => {
+    if (newTechnology.trim()) {
+      setFormData({
+        ...formData,
+        technologies: [...formData.technologies, newTechnology.trim()],
+      })
+      setNewTechnology("")
+    }
+  }
+
+  const removeTechnology = (index: number) => {
+    setFormData({
+      ...formData,
+      technologies: formData.technologies.filter((_:any, i:any) => i !== index),
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="title">Title</Label>
-        <Input id="title" name="title" value={project.title} onChange={handleChange} required />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="description">Description</Label>
-        <Textarea
-          id="description"
-          name="description"
-          value={project.description}
-          onChange={handleChange}
-          rows={5}
-          required
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="githubUrl">GitHub URL</Label>
-        <Input
-          id="githubUrl"
-          name="githubUrl"
-          value={project.githubUrl || ""}
-          onChange={handleChange}
-          placeholder="https://github.com/username/repo"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="liveUrl">Live URL</Label>
-        <Input
-          id="liveUrl"
-          name="liveUrl"
-          value={project.liveUrl || ""}
-          onChange={handleChange}
-          placeholder="https://example.com"
-        />
-        <p className="text-sm text-muted-foreground">If provided, a "Visit Project" button will be displayed</p>
-      </div>
-
-      <div className="space-y-2">
-        <Label>Technologies</Label>
-        <div className="flex flex-wrap gap-2 mb-2">
-          {project.technologies.map((tech, index) => (
-            <div
-              key={index}
-              className="flex items-center bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm"
-            >
-              {tech}
-              <button
-                type="button"
-                onClick={() => handleRemoveTechnology(index)}
-                className="ml-2 text-secondary-foreground/70 hover:text-secondary-foreground"
-              >
-                <X className="h-3 w-3" />
-              </button>
-            </div>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <Input
-            value={newTechnology}
-            onChange={(e) => setNewTechnology(e.target.value)}
-            placeholder="Add a technology"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault()
-                handleAddTechnology()
-              }
-            }}
+    <form onSubmit={handleSubmit} className="space-y-8">
+      <Card>
+        <CardHeader>
+          <CardTitle>Project Images</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ImageUpload
+            value={formData.images}
+            onChange={(url) => setFormData({ ...formData, images: [...formData.images, url] })}
+            onRemove={(url) =>
+              setFormData({
+                ...formData,
+                images: formData.images.filter((image: string) => image !== url),
+              })
+            }
           />
-          <Button type="button" onClick={handleAddTechnology} size="sm">
-            <Plus className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
 
-      <div className="space-y-2">
-        <Label>Images</Label>
-        <ImageUpload value={project.images} onChange={handleImagesChange} onRemove={(url) => setProject((prev) => ({ ...prev, images: prev.images.filter((image) => image !== url) }))}/>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Project Details</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="title">Title</label>
+            <Input
+              id="title"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              required
+            />
+          </div>
 
-      <div className="flex justify-end gap-4">
-        <Button type="button" variant="outline" onClick={() => router.back()} disabled={submitting}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={submitting}>
-          {submitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {projectId ? "Update" : "Create"} Project
-        </Button>
-      </div>
+          <div className="space-y-2">
+            <label htmlFor="shortDescription">Short Description</label>
+            <Textarea
+              id="shortDescription"
+              value={formData.shortDescription}
+              onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="fullDescription">Full Description</label>
+            <Textarea
+              id="fullDescription"
+              value={formData.fullDescription}
+              onChange={(e) => setFormData({ ...formData, fullDescription: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="liveUrl">Live URL</label>
+            <Input
+              id="liveUrl"
+              type="url"
+              value={formData.liveUrl}
+              onChange={(e) => setFormData({ ...formData, liveUrl: e.target.value })}
+              placeholder="https://example.com"
+            />
+            <p className="text-xs text-muted-foreground">The URL where the project is deployed (optional)</p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="githubUrl">GitHub URL</label>
+            <Input
+              id="githubUrl"
+              type="url"
+              value={formData.githubUrl}
+              onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+              placeholder="https://github.com/username/repo"
+            />
+            <p className="text-xs text-muted-foreground">The URL to the project's GitHub repository (optional)</p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="order">Display Order</label>
+            <Input
+              id="order"
+              type="number"
+              value={formData.order}
+              onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
+              required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label>Technologies</label>
+            <div className="flex gap-2">
+              <Input
+                value={newTechnology}
+                onChange={(e) => setNewTechnology(e.target.value)}
+                placeholder="Add technology..."
+              />
+              <Button type="button" onClick={addTechnology}>
+                Add
+              </Button>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {formData.technologies.map((tech: string, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded"
+                >
+                  {tech}
+                  <button type="button" onClick={() => removeTechnology(index)} className="text-muted-foreground">
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Saving..." : "Save Project"}
+      </Button>
     </form>
   )
 }
