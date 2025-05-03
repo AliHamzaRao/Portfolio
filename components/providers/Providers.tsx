@@ -1,19 +1,21 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { ThemeProvider } from "@/components/theme-provider";
-import { Toaster } from "@/components/ui/toaster";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider } from "next-auth/react"
+import { ProfileProvider } from "@/contexts/ProfileContext"
+import { ThemeProvider } from "@/components/providers/ThemeProvider"
+import { ThemeCustomizer } from "@/components/ui/theme-customizer"
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-        {children}
-        <Toaster />
-      </ThemeProvider>
+      <ProfileProvider>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+          {children}
+          <ThemeCustomizer />
+        </ThemeProvider>
+      </ProfileProvider>
     </SessionProvider>
-  );
+  )
 }
-

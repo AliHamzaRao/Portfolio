@@ -1,71 +1,71 @@
-"use client";
+"use client"
 
-import type React from "react";
+import type React from "react"
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImageUpload } from "@/components/ui/image-upload";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { X } from "lucide-react";
-import { useState } from "react";
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ImageUpload } from "@/components/ui/image-upload"
+import { X } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
 
 interface ProjectFormProps {
-  initialData?: any;
-  onSubmit: (data: any) => Promise<void>;
+  initialData?: any
+  onSubmit: (data: any) => Promise<void>
+  isSubmitting?: boolean
 }
 
-export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
-  const { toast } = useToast();
+export function ProjectForm({ initialData, onSubmit, isSubmitting = false }: ProjectFormProps) {
+  const { toast } = useToast()
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     shortDescription: initialData?.shortDescription || "",
     fullDescription: initialData?.fullDescription || "",
     technologies: initialData?.technologies || [],
     images: initialData?.images || [],
+    liveUrl: initialData?.liveUrl || "",
+    githubUrl: initialData?.githubUrl || "",
     order: initialData?.order || 0,
-  });
+  })
 
-  const [newTechnology, setNewTechnology] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [newTechnology, setNewTechnology] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
     try {
-      await onSubmit(formData);
+      await onSubmit(formData)
       toast({
         title: "Success",
         description: "Project saved successfully",
-      });
+      })
     } catch (error) {
-      console.error("Error submitting form:", error);
+      console.error("Error submitting form:", error)
       toast({
         title: "Error",
         description: "Failed to save project",
         variant: "destructive",
-      });
+      })
     }
-    setIsSubmitting(false);
-  };
+  }
 
   const addTechnology = () => {
     if (newTechnology.trim()) {
       setFormData({
         ...formData,
         technologies: [...formData.technologies, newTechnology.trim()],
-      });
-      setNewTechnology("");
+      })
+      setNewTechnology("")
     }
-  };
+  }
 
   const removeTechnology = (index: number) => {
     setFormData({
       ...formData,
-      technologies: formData.technologies.filter((_, i) => i !== index),
-    });
-  };
+      technologies: formData.technologies.filter((_:any, i:any) => i !== index),
+    })
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
@@ -76,13 +76,11 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
         <CardContent>
           <ImageUpload
             value={formData.images}
-            onChange={(url) =>
-              setFormData({ ...formData, images: [...formData.images, url] })
-            }
+            onChange={(url) => setFormData({ ...formData, images: [...formData.images, url] })}
             onRemove={(url) =>
               setFormData({
                 ...formData,
-                images: formData.images.filter((image) => image !== url),
+                images: formData.images.filter((image: string) => image !== url),
               })
             }
           />
@@ -99,9 +97,7 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
             <Input
               id="title"
               value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
             />
           </div>
@@ -111,9 +107,7 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
             <Textarea
               id="shortDescription"
               value={formData.shortDescription}
-              onChange={(e) =>
-                setFormData({ ...formData, shortDescription: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
               required
             />
           </div>
@@ -123,11 +117,33 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
             <Textarea
               id="fullDescription"
               value={formData.fullDescription}
-              onChange={(e) =>
-                setFormData({ ...formData, fullDescription: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, fullDescription: e.target.value })}
               required
             />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="liveUrl">Live URL</label>
+            <Input
+              id="liveUrl"
+              type="url"
+              value={formData.liveUrl}
+              onChange={(e) => setFormData({ ...formData, liveUrl: e.target.value })}
+              placeholder="https://example.com"
+            />
+            <p className="text-xs text-muted-foreground">The URL where the project is deployed (optional)</p>
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="githubUrl">GitHub URL</label>
+            <Input
+              id="githubUrl"
+              type="url"
+              value={formData.githubUrl}
+              onChange={(e) => setFormData({ ...formData, githubUrl: e.target.value })}
+              placeholder="https://github.com/username/repo"
+            />
+            <p className="text-xs text-muted-foreground">The URL to the project's GitHub repository (optional)</p>
           </div>
 
           <div className="space-y-2">
@@ -136,12 +152,7 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
               id="order"
               type="number"
               value={formData.order}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  order: Number.parseInt(e.target.value),
-                })
-              }
+              onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
               required
             />
           </div>
@@ -165,11 +176,7 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
                   className="flex items-center gap-1 bg-secondary text-secondary-foreground px-2 py-1 rounded"
                 >
                   {tech}
-                  <button
-                    type="button"
-                    onClick={() => removeTechnology(index)}
-                    className="text-muted-foreground"
-                  >
+                  <button type="button" onClick={() => removeTechnology(index)} className="text-muted-foreground">
                     <X className="h-4 w-4" />
                   </button>
                 </div>
@@ -183,6 +190,5 @@ export function ProjectForm({ initialData, onSubmit }: ProjectFormProps) {
         {isSubmitting ? "Saving..." : "Save Project"}
       </Button>
     </form>
-  );
+  )
 }
-
