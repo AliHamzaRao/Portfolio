@@ -1,5 +1,6 @@
 "use client";
 
+import AdminLayout from "@/components/admin/AdminLayout";
 import { EducationForm } from "@/components/admin/forms/EducationForm";
 import { useRouter } from "next/navigation";
 
@@ -27,10 +28,11 @@ export default function NewEducationPage() {
   };
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Add New Education</h1>
-      <EducationForm onSubmit={handleSubmit} />
-    </div>
+    <AdminLayout>
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-6">Add New Education</h1>
+        <EducationForm onSubmit={handleSubmit} />
+      </div></AdminLayout>
   );
 }
 

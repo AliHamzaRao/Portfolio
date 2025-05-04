@@ -6,6 +6,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SkillModal } from "../modals/SkillModal";
+import AdminLayout from "@/components/admin/AdminLayout";
 
 export default function SkillsPage() {
   const { toast } = useToast();
@@ -45,7 +46,7 @@ export default function SkillsPage() {
   const handleSubmit = async (data: any) => {
     try {
       const url = selectedSkill
-        ? `/api/skills/${selectedSkill._id}`
+        ? `/api/skills/${selectedSkill?._id}`
         : "/api/skills";
       const method = selectedSkill ? "PUT" : "POST";
 
@@ -60,9 +61,8 @@ export default function SkillsPage() {
       if (response.ok) {
         toast({
           title: "Success",
-          description: `Skill ${
-            selectedSkill ? "updated" : "created"
-          } successfully`,
+          description: `Skill ${selectedSkill ? "updated" : "created"
+            } successfully`,
         });
         fetchSkills();
       } else {
@@ -104,11 +104,11 @@ export default function SkillsPage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <AdminLayout><div>Loading...</div></AdminLayout>;
   }
 
   return (
-    <div className="container mx-auto py-8">
+    <AdminLayout><div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Manage Skills</h1>
         <Button onClick={() => handleOpenModal()}>
@@ -165,7 +165,7 @@ export default function SkillsPage() {
         skill={selectedSkill}
         onSubmit={handleSubmit}
       />
-    </div>
+    </div></AdminLayout>
   );
 }
 

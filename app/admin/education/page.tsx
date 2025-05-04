@@ -1,5 +1,6 @@
 "use client";
 
+import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -51,51 +52,52 @@ export default function EducationPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Education</h1>
-        <Button onClick={() => router.push("/admin/education/new")}>
-          <Plus className="mr-2 h-4 w-4" /> Add Education
-        </Button>
-      </div>
+    <AdminLayout>
+      <div className="container mx-auto py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Manage Education</h1>
+          <Button onClick={() => router.push("/admin/education/new")}>
+            <Plus className="mr-2 h-4 w-4" /> Add Education
+          </Button>
+        </div>
 
-      <div className="grid gap-4">
-        {education.map((edu: any) => (
-          <Card key={edu._id}>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <div>
-                  <span>{edu.degree}</span>
-                  <span className="text-muted-foreground text-sm ml-2">
-                    at {edu.institution}
-                  </span>
-                </div>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => router.push(`/admin/education/${edu._id}`)}
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(edu._id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">{edu.period}</p>
-              {edu.description && <p className="mt-2">{edu.description}</p>}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+        <div className="grid gap-4">
+          {education.map((edu: any) => (
+            <Card key={edu._id}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div>
+                    <span>{edu.degree}</span>
+                    <span className="text-muted-foreground text-sm ml-2">
+                      at {edu.institution}
+                    </span>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => router.push(`/admin/education/${edu._id}`)}
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => handleDelete(edu._id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">{edu.period}</p>
+                {edu.description && <p className="mt-2">{edu.description}</p>}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div></AdminLayout>
   );
 }
 

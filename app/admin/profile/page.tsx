@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ProfileForm } from "@/components/admin/forms/ProfileForm"
+import AdminLayout from "@/components/admin/AdminLayout"
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState(null)
@@ -48,14 +49,16 @@ export default function ProfilePage() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <AdminLayout> <div>Loading...</div></AdminLayout>
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
-      <ProfileForm initialData={profile} onSubmit={handleSubmit} />
-    </div>
+    <AdminLayout>
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
+        <ProfileForm initialData={profile} onSubmit={handleSubmit} />
+      </div>
+    </AdminLayout>
   )
 }
 

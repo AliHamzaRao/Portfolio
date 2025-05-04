@@ -1,5 +1,6 @@
 "use client";
 
+import AdminLayout from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -46,63 +47,64 @@ export default function ProjectsPage() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <AdminLayout><div>Loading...</div></AdminLayout>;
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Manage Projects</h1>
-        <Button onClick={() => router.push("/admin/projects/new")}>
-          <Plus className="mr-2 h-4 w-4" /> Add Project
-        </Button>
-      </div>
+    <AdminLayout>
+      <div className="container mx-auto py-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Manage Projects</h1>
+          <Button onClick={() => router.push("/admin/projects/new")}>
+            <Plus className="mr-2 h-4 w-4" /> Add Project
+          </Button>
+        </div>
 
-      <div className="grid gap-4">
-        {projects.map((project: any) => (
-          <Card key={project._id}>
-            <CardHeader>
-              <CardTitle className="flex items-center justify-between">
-                <span>{project.title}</span>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() =>
-                      router.push(`/admin/projects/${project._id}`)
-                    }
-                  >
-                    <Pencil className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="destructive"
-                    size="icon"
-                    onClick={() => handleDelete(project._id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+        <div className="grid gap-4">
+          {projects.map((project: any) => (
+            <Card key={project._id}>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>{project.title}</span>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() =>
+                        router.push(`/admin/projects/${project._id}`)
+                      }
+                    >
+                      <Pencil className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => handleDelete(project._id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  {project.shortDescription}
+                </p>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {project.technologies.map((tech: string, index: number) => (
+                    <span
+                      key={index}
+                      className="bg-secondary text-secondary-foreground px-2 py-1 rounded text-sm"
+                    >
+                      {tech}
+                    </span>
+                  ))}
                 </div>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                {project.shortDescription}
-              </p>
-              <div className="flex flex-wrap gap-2 mt-2">
-                {project.technologies.map((tech: string, index: number) => (
-                  <span
-                    key={index}
-                    className="bg-secondary text-secondary-foreground px-2 py-1 rounded text-sm"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-    </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div></AdminLayout>
   );
 }
 

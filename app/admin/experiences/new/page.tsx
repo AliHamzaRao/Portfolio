@@ -1,5 +1,6 @@
 "use client";
 
+import AdminLayout from "@/components/admin/AdminLayout";
 import { ExperienceForm } from "@/components/admin/forms/ExperienceForm";
 import { useRouter } from "next/navigation";
 
@@ -26,11 +27,11 @@ export default function NewExperiencePage() {
     }
   };
 
-  return (
+  return (<AdminLayout>
     <div className="container mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Add New Experience</h1>
       <ExperienceForm onSubmit={handleSubmit} />
-    </div>
+    </div></AdminLayout>
   );
 }
 
