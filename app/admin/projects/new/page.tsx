@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation"
 import { ProjectForm } from "@/components/admin/forms/ProjectForm"
+import AdminLayout from "@/components/admin/AdminLayout"
 
 export default function NewProjectPage() {
   const router = useRouter()
@@ -27,10 +28,11 @@ export default function NewProjectPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Add New Project</h1>
-      <ProjectForm onSubmit={handleSubmit} />
-    </div>
+    <AdminLayout>
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-6">Add New Project</h1>
+        <ProjectForm onSubmit={handleSubmit} />
+      </div></AdminLayout>
   )
 }
 

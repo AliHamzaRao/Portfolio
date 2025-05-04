@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation"
 import { useEffect } from "react"
 import AdminLayout from "@/components/admin/AdminLayout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { User, Briefcase, Code, GraduationCap, Award, MessageSquare } from "lucide-react"
+import { User, Briefcase, Code, GraduationCap, Award, MessageSquare, Globe, FileText, Settings } from "lucide-react"
 
 export default function DashboardPage() {
   const { data: session, status } = useSession()
@@ -73,6 +73,24 @@ export default function DashboardPage() {
             description="Add client and colleague feedback"
             icon={<MessageSquare className="h-5 w-5" />}
             href="/admin/testimonials"
+          />
+          <DashboardCard
+            title="Social Links"
+            description="Manage your social media profiles"
+            icon={<Globe className="h-5 w-5" />}
+            href="/admin/socials"
+          />
+          <DashboardCard
+            title="Resume"
+            description="Upload and manage your resume"
+            icon={<FileText className="h-5 w-5" />}
+            href="/admin/resume"
+          />
+          <DashboardCard
+            title="Settings"
+            description="Configure portfolio appearance"
+            icon={<Settings className="h-5 w-5" />}
+            href="/admin/settings"
           />
         </div>
       </div>

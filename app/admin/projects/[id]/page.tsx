@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { ProjectForm } from "@/components/admin/forms/ProjectForm"
+import AdminLayout from "@/components/admin/AdminLayout"
 
 export default function EditProjectPage({ params }: { params: { id: string } }) {
   const [project, setProject] = useState(null)
@@ -48,18 +49,19 @@ export default function EditProjectPage({ params }: { params: { id: string } }) 
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <AdminLayout><div>Loading...</div></AdminLayout >
   }
 
   if (!project) {
-    return <div>Project not found</div>
+    return <AdminLayout><div>Project not found</div></AdminLayout>
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <h1 className="text-2xl font-bold mb-6">Edit Project</h1>
-      <ProjectForm initialData={project} onSubmit={handleSubmit} />
-    </div>
+    <AdminLayout>
+      <div className="container mx-auto py-8">
+        <h1 className="text-2xl font-bold mb-6">Edit Project</h1>
+        <ProjectForm initialData={project} onSubmit={handleSubmit} />
+      </div></AdminLayout>
   )
 }
 

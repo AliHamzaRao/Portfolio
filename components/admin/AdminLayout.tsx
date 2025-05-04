@@ -30,9 +30,10 @@ import {
   FileText,
   MessageSquare,
   Globe,
+  ArrowLeft,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ModeToggle } from "@/components/ui/mode-toggle"
+import { ThemeToggle } from "@/components/ui/theme-toggle"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -48,9 +49,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push("/admin/login")
   }
 
+  const handleBack = () => {
+    if (pathname?.includes("/new") || pathname?.includes("/[id]")) {
+      const parentPath = pathname.split("/").slice(0, -1).join("/")
+      router.push(parentPath)
+    } else {
+      router.push("/admin/dashboard")
+    }
+  }
+
+  const showBackButton = pathname !== "/admin/dashboard"
+
   return (
     <SidebarProvider defaultOpen={true}>
-      <div className="flex min-h-screen bg-muted/40">
+      <div className="flex min-h-screen w-full bg-muted/40">
         <Sidebar className="border-r">
           <SidebarHeader className="border-b px-6 py-3">
             <Link href="/admin/dashboard" className="flex items-center gap-2">
@@ -150,7 +162,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <LogOut className="h-4 w-4" />
                 <span>Sign Out</span>
               </Button>
-              <ModeToggle />
+              <ThemeToggle />
             </div>
           </SidebarFooter>
         </Sidebar>
@@ -158,8 +170,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="flex h-16 items-center border-b px-6">
             <SidebarTrigger />
             <div className="ml-4 text-lg font-medium">Portfolio Management</div>
+            <div className="ml-auto flex items-center gap-2">
+              {showBackButton && (
+                <Button variant="outline" size="sm" onClick={handleBack} className="flex items-center gap-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span>Back</span>
+                </Button>
+              )}
+            </div>
           </div>
-          <main className="p-6">{children}</main>
+          <main className="p-6 w-full">{children}</main>
         </SidebarInset>
       </div>
     </SidebarProvider>

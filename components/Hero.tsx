@@ -13,6 +13,7 @@ export default function Hero() {
   const { profile, loading } = useProfile()
   const [scrollY, setScrollY] = useState(0)
   const heroRef = useRef<HTMLDivElement>(null)
+  const { theme } = useTheme()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,25 +26,23 @@ export default function Hero() {
 
   const handleDownloadResume = async () => {
     try {
-      if (profile) {
-        // If we have a direct resume URL, use it
-        if (profile.resumeUrl) {
-          window.open(profile.resumeUrl, "_blank")
-          return
-        }
-
-        // Fallback to the API endpoint
-        const response = await fetch("/api/resume")
-        const blob = await response.blob()
-        const url = window.URL.createObjectURL(blob)
-        const a = document.createElement("a")
-        a.href = url
-        a.download = profile.resumeName || "resume.pdf"
-        document.body.appendChild(a)
-        a.click()
-        window.URL.revokeObjectURL(url)
-        document.body.removeChild(a)
+      // If we have a direct resume URL, use it
+      if (profile?.resumeUrl) {
+        window.open(profile.resumeUrl, "_blank")
+        return
       }
+
+      // Fallback to the API endpoint
+      const response = await fetch("/api/resume")
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = profile?.resumeName || "resume.pdf"
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
     } catch (error) {
       console.error("Error downloading resume:", error)
     }
@@ -106,7 +105,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className="text-4xl md:text-6xl font-bold text-white dark:text-white text-slate-800 text-center mb-4 font-handwriting italic"
+          className={`text-4xl md:text-6xl font-bold ${theme === "dark" ? "text-white" : "text-slate-800"} text-center mb-4 font-handwriting italic`}
           style={{ fontFamily: "var(--font-name, 'Pacifico, cursive')" }}
         >
           {profile?.name}
@@ -116,7 +115,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-xl md:text-2xl text-sky-600 dark:text-sky-400 font-light mb-6 text-center font-handwriting italic"
+          className={`text-xl md:text-2xl ${theme === "dark" ? "text-sky-400" : "text-sky-600"} font-light mb-6 text-center font-handwriting italic`}
           style={{ fontFamily: "var(--font-title, 'Poppins, sans-serif')" }}
         >
           <TypeAnimation
@@ -138,7 +137,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="text-slate-700 dark:text-slate-300 max-w-2xl text-center mb-8"
+          className={`${theme === "dark" ? "text-slate-300" : "text-slate-700"} max-w-2xl text-center mb-8`}
           style={{ fontFamily: "var(--font-body, 'Inter, sans-serif')" }}
         >
           {profile?.description}
@@ -152,7 +151,9 @@ export default function Hero() {
         >
           <Button
             onClick={handleDownloadResume}
-            className="bg-sky-500 hover:bg-sky-600 text-white dark:bg-sky-500 dark:hover:bg-sky-600 dark:text-white px-6 py-2 rounded-full flex items-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20"
+            className={`${
+              theme === "dark" ? "bg-sky-500 hover:bg-sky-600 text-white" : "bg-sky-600 hover:bg-sky-700 text-white"
+            } px-6 py-2 rounded-full flex items-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20`}
             disabled={!profile?.resumeUrl}
           >
             <Download className="w-4 h-4" />
@@ -161,7 +162,11 @@ export default function Hero() {
           <Button
             asChild
             variant="outline"
-            className="border-sky-500/50 text-sky-600 dark:text-sky-400 hover:bg-sky-500/10 dark:hover:bg-sky-500/10 px-6 py-2 rounded-full flex items-center gap-2"
+            className={`${
+              theme === "dark"
+                ? "border-sky-500/50 text-sky-400 hover:bg-sky-500/10"
+                : "border-sky-600/50 text-sky-600 hover:bg-sky-500/10"
+            } px-6 py-2 rounded-full flex items-center gap-2`}
           >
             <a href="#contact">Contact Me</a>
           </Button>
@@ -186,9 +191,11 @@ export default function Hero() {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
       >
-        <span className="text-slate-500 dark:text-slate-400 text-sm mb-2">Scroll to explore</span>
+        <span className={`${theme === "dark" ? "text-slate-400" : "text-slate-500"} text-sm mb-2`}>
+          Scroll to explore
+        </span>
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}>
-          <ChevronDown className="w-6 h-6 text-sky-600 dark:text-sky-400" />
+          <ChevronDown className={`w-6 h-6 ${theme === "dark" ? "text-sky-400" : "text-sky-600"}`} />
         </motion.div>
       </motion.div>
     </div>
@@ -205,7 +212,11 @@ function SocialIcon({ platform, url }: { platform: string; url: string }) {
       rel="noopener noreferrer"
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.95 }}
-      className="flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 text-sky-600 dark:text-sky-400 hover:bg-sky-500 dark:hover:bg-sky-500 hover:text-white dark:hover:text-white transition-all duration-300 shadow-lg"
+      className={`flex items-center justify-center w-10 h-10 rounded-full ${
+        theme === "dark"
+          ? "bg-slate-800 text-sky-400 hover:bg-sky-500 hover:text-white"
+          : "bg-slate-100 text-sky-600 hover:bg-sky-600 hover:text-white"
+      } transition-all duration-300 shadow-lg`}
     >
       <img
         src={`https://cdn.simpleicons.org/${platform.toLowerCase()}/${theme === "dark" ? "white" : "0ea5e9"}`}
@@ -216,13 +227,13 @@ function SocialIcon({ platform, url }: { platform: string; url: string }) {
           const getDefaultIcon = () => {
             switch (platform.toLowerCase()) {
               case "github":
-                return <Github className="w-5 h-5" />
+                return <Github className="w-5 w-5" />
               case "linkedin":
-                return <Linkedin className="w-5 h-5" />
+                return <Linkedin className="w-5 w-5" />
               case "twitter":
-                return <Twitter className="w-5 h-5" />
+                return <Twitter className="w-5 w-5" />
               default:
-                return <Globe className="w-5 h-5" />
+                return <Globe className="w-5 w-5" />
             }
           }
 

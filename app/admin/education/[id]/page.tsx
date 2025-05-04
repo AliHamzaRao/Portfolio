@@ -1,5 +1,6 @@
 "use client";
 
+import AdminLayout from "@/components/admin/AdminLayout";
 import { EducationForm } from "@/components/admin/forms/EducationForm";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -52,18 +53,19 @@ export default function EditEducationPage({
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <AdminLayout><div>Loading...</div></AdminLayout>;
   }
 
   if (!education) {
-    return <div>Education entry not found</div>;
+    return <AdminLayout><div>Education entry not found</div></AdminLayout>;
   }
 
   return (
-    <div className="container mx-auto py-8">
+
+    <AdminLayout><div className="container mx-auto py-8">
       <h1 className="text-2xl font-bold mb-6">Edit Education</h1>
       <EducationForm initialData={education} onSubmit={handleSubmit} />
-    </div>
+    </div></AdminLayout>
   );
 }
 
