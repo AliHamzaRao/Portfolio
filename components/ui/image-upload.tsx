@@ -8,9 +8,10 @@ import type React from "react";
 import { useCallback, useState } from "react";
 
 interface ImageUploadProps {
-  onChange: (value: string) => void;
+  onChange: (value: string[]) => void;
   onRemove: (value: string) => void;
   value: string[];
+  multiple?: boolean;
 }
 
 export const ImageUpload: React.FC<ImageUploadProps> = ({
@@ -33,7 +34,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           handleUploadUrl: "/api/upload",
         });
 
-        onChange(blob.url);
+        onChange([...value, blob.url]);
       } catch (error) {
         console.error("Error uploading file:", error);
       } finally {

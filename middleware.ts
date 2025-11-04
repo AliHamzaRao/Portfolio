@@ -4,7 +4,6 @@ import { NextResponse } from "next/server"
 export function middleware(request: NextRequest) {
     // Get the pathname of the request (e.g. /, /api/endpoint)
     const path = request.nextUrl.pathname
-
     // If it's the root path, just return the response
     if (path === "/") {
         return NextResponse.next()

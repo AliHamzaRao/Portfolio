@@ -46,13 +46,14 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
     name: initialData?.name || "",
     title: initialData?.title || "",
     description: initialData?.description || "",
+    aboutMe: initialData?.aboutMe || "", // added about me field
     email: initialData?.email || "",
     phone: initialData?.phone || "",
     location: initialData?.location || "",
     image: initialData?.image || "",
     socialLinks: Array.isArray(initialData?.socialLinks)
       ? initialData.socialLinks
-      : [], // Fix here
+      : [],
   });
 
   const [newSocialLink, setNewSocialLink] = useState<SocialLink>({
@@ -110,7 +111,7 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
   const removeSocialLink = (index: number) => {
     setFormData({
       ...formData,
-      socialLinks: formData.socialLinks.filter((_, i) => i !== index),
+      socialLinks: formData.socialLinks.filter((_: any, i: any) => i !== index),
     });
   };
 
@@ -171,14 +172,28 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="description">About Me</label>
+            <label htmlFor="description">Short Description</label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) =>
                 setFormData({ ...formData, description: e.target.value })
               }
+              placeholder="A brief description that appears in the hero section"
               required
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="aboutMe">About Me Section</label>
+            <Textarea
+              id="aboutMe"
+              value={formData.aboutMe}
+              onChange={(e) =>
+                setFormData({ ...formData, aboutMe: e.target.value })
+              }
+              placeholder="Detailed about me section that appears in the About section"
+              className="h-32"
             />
           </div>
 
@@ -232,7 +247,10 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
                 onOpenChange={setOpenPlatformSelect}
               >
                 <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-[200px]">
+                  <Button
+                    variant="outline"
+                    className="w-[200px] bg-transparent"
+                  >
                     {newSocialLink.platform || "Select platform"}
                   </Button>
                 </PopoverTrigger>
@@ -318,4 +336,3 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
     </form>
   );
 }
-

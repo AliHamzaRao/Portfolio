@@ -1,8 +1,8 @@
 "use client"
 
-import { useInView } from "react-intersection-observer"
 import { motion } from "framer-motion"
 import { Code, Lightbulb, Users, Zap } from "lucide-react"
+import { useInView } from "react-intersection-observer"
 
 const About = () => {
   const [ref, inView] = useInView({
@@ -76,7 +76,7 @@ const About = () => {
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-slate-300 max-w-3xl mx-auto text-lg"
           >
-            As a Senior Software Engineer with more than 5 years of experience, I specialize in enhancing performance,
+            As a Senior Software Engineer with more than 7 years of experience, I specialize in enhancing performance,
             optimizing user interfaces, and ensuring seamless user experiences. I have a proven track record in
             launching innovative web services and applications, driving technical leadership, and fostering
             cross-functional collaboration. My expertise bridges development and design, focusing on high-performance,
