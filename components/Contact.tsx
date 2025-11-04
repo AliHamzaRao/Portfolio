@@ -136,11 +136,11 @@ const Contact = () => {
 
             <div className="mt-8 pt-8 border-t border-slate-700">
               <h4 className="text-lg font-semibold text-white mb-4">Connect with me</h4>
-              <div className="flex gap-4">
+              {/* <div className="flex gap-4">
                 {profile?.socialLinks?.map((link, index) => (
                   <SocialIcon key={index} platform={link.platform} url={link.url} />
                 ))}
-              </div>
+              </div> */}
             </div>
           </motion.div>
 
@@ -173,7 +173,7 @@ const Contact = () => {
                   </label>
                   <Input
                     id="email"
-                    name="email"
+                    name="reply_to"
                     type="email"
                     value={formData.reply_to}
                     onChange={handleChange}
