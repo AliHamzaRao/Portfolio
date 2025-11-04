@@ -2,21 +2,21 @@
 
 import type React from "react"
 
+import { useProfile } from "@/contexts/ProfileContext"
+import emailjs from "@emailjs/browser"
+import { motion } from "framer-motion"
+import { Github, Globe, Linkedin, Mail, MapPin, Phone, Send, Twitter } from "lucide-react"
 import { useState } from "react"
 import { useInView } from "react-intersection-observer"
-import { motion } from "framer-motion"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
 import { Textarea } from "./ui/textarea"
-import { Mail, Phone, MapPin, Send, Github, Linkedin, Twitter, Globe } from "lucide-react"
-import { useProfile } from "@/contexts/ProfileContext"
-import emailjs from "@emailjs/browser"
 
 const Contact = () => {
   const { profile } = useProfile()
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    reply_to: "",
     message: "",
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,7 +42,7 @@ const Contact = () => {
         "bIJ0TP2VcmoF9v7bK"
       );
       setSubmitStatus("success");
-      setFormData({ name: "", email: "", message: "" });
+      setFormData({ name: "", reply_to: "", message: "" });
     } catch (error) {
       setSubmitStatus("error")
     }
@@ -175,7 +175,7 @@ const Contact = () => {
                     id="email"
                     name="email"
                     type="email"
-                    value={formData.email}
+                    value={formData.reply_to}
                     onChange={handleChange}
                     required
                     className="bg-slate-700 border-slate-600 text-white focus:border-sky-400 focus:ring-sky-400/20"
