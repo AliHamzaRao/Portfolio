@@ -15,6 +15,10 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     required: [true, "Please provide a description"],
   },
+  aboutMe: {
+    type: String,
+    required: [true, "Please provide an about me section"],
+  },
   image: {
     type: String,
   },

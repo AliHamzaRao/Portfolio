@@ -1,9 +1,9 @@
-import dbConnect from "./mongodb"
+import Education from "../models/Education"
+import Experience from "../models/Experience"
 import Profile from "../models/Profile"
 import Project from "../models/Project"
 import Skill from "../models/Skill"
-import Experience from "../models/Experience"
-import Education from "../models/Education"
+import dbConnect from "./mongodb"
 
 const defaultData = {
   profile: {
@@ -19,6 +19,8 @@ const defaultData = {
       linkedin: "https://linkedin.com/in/AliHamzaRao",
       twitter: "https://twitter.com/AliHamzaRao",
     },
+    aboutMe:
+      "As a Senior Software Engineer with more than 7 years of experience, I specialize in enhancing performance, optimizing user interfaces, and ensuring seamless user experiences. I have a proven track record in launching innovative web services and applications, driving technical leadership, and fostering cross-functional collaboration. My expertise bridges development and design, focusing on high-performance, scalable solutions that drive organizations forward.",
   },
   projects: [
     {
@@ -84,7 +86,7 @@ const defaultData = {
     {
       title: "Frontend Developer UIUX/ VUE.JS",
       company: "Techscale",
-      period: "Dec 2024 - Present",
+      period: "Dec 2024 - June 2025",
       description:
         "Spearheading the development of cutting-edge user interfaces, I blend modern design principles with robust Vue.js implementations to create seamless, responsive web applications that push the boundaries of user experience.",
       order: 1,
@@ -121,11 +123,19 @@ const defaultData = {
         "Began my journey as a junior developer and quickly progressed to handling complex frontend tasks. I played a key role in modernizing legacy interfaces and implementing new features that significantly improved user engagement and satisfaction.",
       order: 5,
     },
+    {
+      title: "Trainee Web Developer",
+      company: "Vvork Cloud Technologies",
+      period: "Sept. 2018 - Feb 2020",
+      description:
+        "I was a trainee there and learnt all basics about web development that built a strong foundation of everything I know now.",
+      order: 5,
+    },
   ],
   education: [
     {
       degree: "Bachelors of Sciences in Computer Science",
-      institution: "University Name",
+      institution: "Lahore Leads University",
       period: "2020 - 2024",
       description: "Focused on software engineering, data structures, and algorithms.",
       order: 1,

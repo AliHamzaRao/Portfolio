@@ -1,60 +1,70 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
-import { motion } from "framer-motion"
-import { useProfile } from "@/contexts/ProfileContext"
-import { Button } from "./ui/button"
-import { Download, ChevronDown, Github, Linkedin, Twitter, Globe } from "lucide-react"
-import Image from "next/image"
-import { TypeAnimation } from "react-type-animation"
-import { useTheme } from "next-themes"
+import { useProfile } from "@/contexts/ProfileContext";
+import { motion } from "framer-motion";
+import {
+  ChevronDown,
+  Download,
+  Github,
+  Globe,
+  Linkedin,
+  Twitter,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { TypeAnimation } from "react-type-animation";
+import { Button } from "./ui/button";
 
 export default function Hero() {
-  const { profile, loading } = useProfile()
-  const [scrollY, setScrollY] = useState(0)
-  const heroRef = useRef<HTMLDivElement>(null)
-  const { theme } = useTheme()
+  const { profile, loading } = useProfile();
+  const [scrollY, setScrollY] = useState(0);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrollY(window.scrollY)
-    }
+      setScrollY(window.scrollY);
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleDownloadResume = async () => {
     try {
       // If we have a direct resume URL, use it
       if (profile?.resumeUrl) {
-        window.open(profile.resumeUrl, "_blank")
-        return
+        window.open(profile.resumeUrl, "_blank");
+        return;
       }
 
       // Fallback to the API endpoint
-      const response = await fetch("/api/resume")
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement("a")
-      a.href = url
-      a.download = profile?.resumeName || "resume.pdf"
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
+      const response = await fetch("/api/resume");
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = profile?.resumeName || "resume.pdf";
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
     } catch (error) {
-      console.error("Error downloading resume:", error)
+      console.error("Error downloading resume:", error);
     }
-  }
+  };
 
-  if (loading) return null
+  if (loading) return null;
 
-  const parallaxY = -scrollY * 0.5
-  const opacityValue = Math.max(0, 1 - scrollY / 500)
+  const parallaxY = -scrollY * 0.5;
+  const opacityValue = Math.max(0, 1 - scrollY / 500);
 
   return (
-    <div ref={heroRef} className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+    <div
+      ref={heroRef}
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+    >
       {/* Background elements - different for light/dark modes */}
       <div className="absolute inset-0 z-0">
         {/* Dark mode background */}
@@ -83,7 +93,10 @@ export default function Hero() {
       {/* Content */}
       <div
         className="container mx-auto px-4 z-10 flex flex-col items-center justify-center"
-        style={{ transform: `translateY(${parallaxY}px)`, opacity: opacityValue }}
+        style={{
+          transform: `translateY(${parallaxY}px)`,
+          opacity: opacityValue,
+        }}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
@@ -105,7 +118,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
-          className={`text-4xl md:text-6xl font-bold ${theme === "dark" ? "text-white" : "text-slate-800"} text-center mb-4 font-handwriting italic`}
+          className={`text-4xl md:text-6xl font-bold ${
+            theme === "dark" ? "text-white" : "text-slate-800"
+          } text-center mb-4 font-handwriting italic`}
           style={{ fontFamily: "var(--font-name, 'Pacifico, cursive')" }}
         >
           {profile?.name}
@@ -115,7 +130,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className={`text-xl md:text-2xl ${theme === "dark" ? "text-sky-400" : "text-sky-600"} font-light mb-6 text-center font-handwriting italic`}
+          className={`text-xl md:text-2xl ${
+            theme === "dark" ? "text-sky-400" : "text-sky-600"
+          } font-light mb-6 text-center font-handwriting italic`}
           style={{ fontFamily: "var(--font-title, 'Poppins, sans-serif')" }}
         >
           <TypeAnimation
@@ -137,7 +154,9 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className={`${theme === "dark" ? "text-slate-300" : "text-slate-700"} max-w-2xl text-center mb-8`}
+          className={`${
+            theme === "dark" ? "text-slate-300" : "text-slate-700"
+          } max-w-2xl text-center mb-8`}
           style={{ fontFamily: "var(--font-body, 'Inter, sans-serif')" }}
         >
           {profile?.description}
@@ -152,7 +171,9 @@ export default function Hero() {
           <Button
             onClick={handleDownloadResume}
             className={`${
-              theme === "dark" ? "bg-sky-500 hover:bg-sky-600 text-white" : "bg-sky-600 hover:bg-sky-700 text-white"
+              theme === "dark"
+                ? "bg-sky-500 hover:bg-sky-600 text-white"
+                : "bg-sky-600 hover:bg-sky-700 text-white"
             } px-6 py-2 rounded-full flex items-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20`}
             disabled={!profile?.resumeUrl}
           >
@@ -172,7 +193,7 @@ export default function Hero() {
           </Button>
         </motion.div>
 
-        <motion.div
+        {/* <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 1 }}
@@ -181,7 +202,7 @@ export default function Hero() {
           {profile?.socialLinks?.map((link, index) => (
             <SocialIcon key={index} platform={link.platform} url={link.url} />
           ))}
-        </motion.div>
+        </motion.div> */}
       </div>
 
       {/* Scroll indicator */}
@@ -191,19 +212,30 @@ export default function Hero() {
         transition={{ delay: 1.5, duration: 1 }}
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
       >
-        <span className={`${theme === "dark" ? "text-slate-400" : "text-slate-500"} text-sm mb-2`}>
+        <span
+          className={`${
+            theme === "dark" ? "text-slate-400" : "text-slate-500"
+          } text-sm mb-2`}
+        >
           Scroll to explore
         </span>
-        <motion.div animate={{ y: [0, 10, 0] }} transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}>
-          <ChevronDown className={`w-6 h-6 ${theme === "dark" ? "text-sky-400" : "text-sky-600"}`} />
+        <motion.div
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
+        >
+          <ChevronDown
+            className={`w-6 h-6 ${
+              theme === "dark" ? "text-sky-400" : "text-sky-600"
+            }`}
+          />
         </motion.div>
       </motion.div>
     </div>
-  )
+  );
 }
 
 function SocialIcon({ platform, url }: { platform: string; url: string }) {
-  const { theme } = useTheme()
+  const { theme } = useTheme();
 
   return (
     <motion.a
@@ -219,7 +251,9 @@ function SocialIcon({ platform, url }: { platform: string; url: string }) {
       } transition-all duration-300 shadow-lg`}
     >
       <img
-        src={`https://cdn.simpleicons.org/${platform.toLowerCase()}/${theme === "dark" ? "white" : "0ea5e9"}`}
+        src={`https://cdn.simpleicons.org/${platform.toLowerCase()}/${
+          theme === "dark" ? "white" : "0ea5e9"
+        }`}
         alt={platform}
         className="w-5 h-5"
         onError={(e) => {
@@ -227,26 +261,26 @@ function SocialIcon({ platform, url }: { platform: string; url: string }) {
           const getDefaultIcon = () => {
             switch (platform.toLowerCase()) {
               case "github":
-                return <Github className="w-5 w-5" />
+                return <Github className="w-5 w-5" />;
               case "linkedin":
-                return <Linkedin className="w-5 w-5" />
+                return <Linkedin className="w-5 w-5" />;
               case "twitter":
-                return <Twitter className="w-5 w-5" />
+                return <Twitter className="w-5 w-5" />;
               default:
-                return <Globe className="w-5 w-5" />
+                return <Globe className="w-5 w-5" />;
             }
-          }
+          };
 
           // Replace the img with the fallback icon
-          const parent = e.currentTarget.parentNode as HTMLElement
+          const parent = e.currentTarget.parentNode as HTMLElement;
           if (parent) {
-            parent.innerHTML = ""
-            const iconElement = document.createElement("div")
-            iconElement.innerHTML = getDefaultIcon().toString()
-            parent.appendChild(iconElement)
+            parent.innerHTML = "";
+            const iconElement = document.createElement("div");
+            iconElement.innerHTML = getDefaultIcon().toString();
+            parent.appendChild(iconElement);
           }
         }}
       />
     </motion.a>
-  )
+  );
 }
