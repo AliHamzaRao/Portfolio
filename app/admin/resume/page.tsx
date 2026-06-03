@@ -2,13 +2,13 @@
 
 import type React from "react"
 
-import { useState, useRef, useEffect } from "react"
 import AdminLayout from "@/components/admin/AdminLayout"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useToast } from "@/components/ui/use-toast"
-import { Download, FileUp, Trash2, Eye, File } from "lucide-react"
 import { put } from "@vercel/blob"
+import { Download, Eye, File, FileUp, Trash2 } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 
 export default function ResumePage() {
   const { toast } = useToast()
@@ -65,11 +65,12 @@ export default function ResumePage() {
     setIsUploading(true)
 
     try {
+      console.log("BLOB_READ_WRITE_TOKEN:", process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN)
       // Upload to Vercel Blob
       const blob = await put(`resumes/${file.name}`, file, {
         access: "public",
+        token: process.env.NEXT_PUBLIC_BLOB_READ_WRITE_TOKEN,
     })
-    // token: process.env.BLOB_READ_WRITE_TOKEN,
 
       // Save resume info to database
       const response = await fetch("/api/resume/info", {
