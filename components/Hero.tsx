@@ -2,44 +2,46 @@
 
 import { useProfile } from "@/contexts/ProfileContext";
 import { motion } from "framer-motion";
-import {
-  ChevronDown,
-  Download,
-  Github,
-  Globe,
-  Linkedin,
-  Twitter,
-} from "lucide-react";
-import { useTheme } from "next-themes";
+import { ArrowRight, ChevronDown, Download } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import { TypeAnimation } from "react-type-animation";
 import { Button } from "./ui/button";
+
+const fallbackMetrics = [
+  { value: "6+", label: "Years of experience" },
+  { value: "20+", label: "Projects shipped" },
+  { value: "10+", label: "Engineers led" },
+];
+
+/** Accent the segment after "&" (e.g. "… & UI Architect"), else the last word. */
+function renderTitle(title: string) {
+  if (!title) return null;
+  if (title.includes("&")) {
+    const [first, ...rest] = title.split("&");
+    return (
+      <>
+        {first.trim()}{" "}
+        <span className="text-brand-400">&amp; {rest.join("&").trim()}</span>
+      </>
+    );
+  }
+  const words = title.trim().split(" ");
+  const last = words.pop();
+  return (
+    <>
+      {words.join(" ")} <span className="text-brand-400">{last}</span>
+    </>
+  );
+}
 
 export default function Hero() {
   const { profile, loading } = useProfile();
-  const [scrollY, setScrollY] = useState(0);
-  const heroRef = useRef<HTMLDivElement>(null);
-  const { theme } = useTheme();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const handleDownloadResume = async () => {
     try {
-      // If we have a direct resume URL, use it
       if (profile?.resumeUrl) {
         window.open(profile.resumeUrl, "_blank");
         return;
       }
-
-      // Fallback to the API endpoint
       const response = await fetch("/api/resume");
       const blob = await response.blob();
       const url = window.URL.createObjectURL(blob);
@@ -57,230 +59,161 @@ export default function Hero() {
 
   if (loading) return null;
 
-  const parallaxY = -scrollY * 0.5;
-  const opacityValue = Math.max(0, 1 - scrollY / 500);
+  const metrics =
+    profile?.metrics && profile.metrics.length > 0
+      ? profile.metrics
+      : fallbackMetrics;
 
   return (
-    <div
-      ref={heroRef}
-      className="relative min-h-screen flex flex-col justify-center overflow-hidden"
+    <section
+      id="home"
+      className="relative min-h-screen flex flex-col justify-center overflow-hidden bg-slate-950"
     >
-      {/* Background elements - different for light/dark modes */}
+      {/* Background: grid + brand radial glows */}
       <div className="absolute inset-0 z-0">
-        {/* Dark mode background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 dark:opacity-100 opacity-0 transition-opacity duration-500"></div>
-
-        {/* Light mode background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-sky-50 via-white to-indigo-50 dark:opacity-0 opacity-100 transition-opacity duration-500"></div>
-
-        {/* Dark mode effects */}
-        <div className="absolute inset-0 dark:opacity-30 opacity-0 transition-opacity duration-500">
-          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_50%,rgba(76,29,149,0.1),rgba(76,29,149,0)_70%)]"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[radial-gradient(circle_at_50%_50%,rgba(56,189,248,0.1),rgba(56,189,248,0)_70%)]"></div>
-        </div>
-
-        {/* Light mode effects - colorful bubbles */}
-        <div className="absolute inset-0 dark:opacity-0 opacity-100 transition-opacity duration-500 overflow-hidden">
-          <div className="absolute top-[10%] left-[15%] w-[300px] h-[300px] rounded-full bg-gradient-to-r from-pink-200 to-pink-300 opacity-20 blur-3xl"></div>
-          <div className="absolute top-[40%] left-[60%] w-[250px] h-[250px] rounded-full bg-gradient-to-r from-blue-200 to-cyan-200 opacity-20 blur-3xl"></div>
-          <div className="absolute top-[70%] left-[25%] w-[350px] h-[350px] rounded-full bg-gradient-to-r from-purple-200 to-indigo-200 opacity-20 blur-3xl"></div>
-        </div>
-
-        {/* Grid overlay for both modes */}
-        <div className="absolute inset-0 bg-[url('/grid.png')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))]"></div>
+        <div className="absolute top-[-10%] left-[-5%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,rgba(14,165,233,0.16),transparent_70%)]" />
+        <div className="absolute bottom-[-10%] right-[-5%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12),transparent_70%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.04)_1px,transparent_1px)] bg-[size:56px_56px] [mask-image:radial-gradient(ellipse_at_center,black,transparent_75%)]" />
       </div>
 
       {/* Content */}
-      <div
-        className="container mx-auto px-4 z-10 flex flex-col items-center justify-center"
-        style={{
-          transform: `translateY(${parallaxY}px)`,
-          opacity: opacityValue,
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="relative w-40 h-40 md:w-48 md:h-48 mb-8 rounded-full overflow-hidden border-4 border-sky-400/30 shadow-xl shadow-sky-500/20 dark:border-sky-400/30 dark:shadow-sky-500/20 border-sky-300/50 shadow-sky-300/30"
-        >
-          <Image
-            src={profile?.image || "/placeholder.svg"}
-            alt={profile?.name || "Profile"}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 160px, 192px"
-            priority
-          />
-        </motion.div>
+      <div className="container relative z-10 mx-auto px-4 pt-28 pb-20">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr]">
+          {/* Left: copy */}
+          <div className="max-w-2xl">
+            {profile?.availabilityStatus && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-500/10 px-4 py-1.5"
+              >
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                </span>
+                <span className="font-mono text-xs uppercase tracking-widest text-emerald-300">
+                  {profile.availabilityStatus}
+                </span>
+              </motion.div>
+            )}
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-          className={`text-4xl md:text-6xl font-bold ${
-            theme === "dark" ? "text-white" : "text-slate-800"
-          } text-center mb-4 font-handwriting italic`}
-          style={{ fontFamily: "var(--font-name, 'Pacifico, cursive')" }}
-        >
-          {profile?.name}
-        </motion.h1>
+            {profile?.name && (
+              <motion.p
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.05 }}
+                className="mb-3 font-mono text-sm uppercase tracking-[0.3em] text-slate-400"
+              >
+                {profile.name}
+              </motion.p>
+            )}
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className={`text-xl md:text-2xl ${
-            theme === "dark" ? "text-sky-400" : "text-sky-600"
-          } font-light mb-6 text-center font-handwriting italic`}
-          style={{ fontFamily: "var(--font-title, 'Poppins, sans-serif')" }}
-        >
-          <TypeAnimation
-            sequence={[
-              profile?.title || "Senior Software Engineer",
-              1000,
-              "UI/UX Specialist",
-              1000,
-              "Frontend Architect",
-              1000,
-            ]}
-            wrapper="span"
-            speed={50}
-            repeat={Number.POSITIVE_INFINITY}
-          />
-        </motion.div>
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="font-heading text-4xl font-extrabold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-6xl"
+            >
+              {renderTitle(profile?.title || "Senior Frontend Lead & UI Architect")}
+            </motion.h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-          className={`${
-            theme === "dark" ? "text-slate-300" : "text-slate-700"
-          } max-w-2xl text-center mb-8`}
-          style={{ fontFamily: "var(--font-body, 'Inter, sans-serif')" }}
-        >
-          {profile?.description}
-        </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="mt-6 max-w-xl text-lg leading-relaxed text-slate-300"
+            >
+              {profile?.description}
+            </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.8 }}
-          className="flex flex-wrap gap-4 justify-center"
-        >
-          <Button
-            onClick={handleDownloadResume}
-            className={`${
-              theme === "dark"
-                ? "bg-sky-500 hover:bg-sky-600 text-white"
-                : "bg-sky-600 hover:bg-sky-700 text-white"
-            } px-6 py-2 rounded-full flex items-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/20`}
-            disabled={!profile?.resumeUrl}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-8 flex flex-wrap gap-4"
+            >
+              <Button
+                asChild
+                className="group rounded-full bg-brand-500 px-6 py-6 text-base font-medium text-white hover:bg-brand-400"
+              >
+                <a href="#projects">
+                  View Projects
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </a>
+              </Button>
+              <Button
+                onClick={handleDownloadResume}
+                variant="outline"
+                disabled={!profile?.resumeUrl}
+                className="rounded-full border-slate-700 bg-transparent px-6 py-6 text-base font-medium text-slate-200 hover:border-brand-400/50 hover:bg-brand-500/10 hover:text-white"
+              >
+                <Download className="mr-2 h-4 w-4" />
+                Download Resume
+              </Button>
+            </motion.div>
+
+            {/* Metrics */}
+            <motion.dl
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-12 grid max-w-lg grid-cols-3 gap-6 border-t border-white/5 pt-8"
+            >
+              {metrics.map((metric, i) => (
+                <div key={i}>
+                  <dt className="font-heading text-3xl font-bold text-brand-400">
+                    {metric.value}
+                  </dt>
+                  <dd className="mt-1 font-mono text-xs uppercase tracking-wide text-slate-400">
+                    {metric.label}
+                  </dd>
+                </div>
+              ))}
+            </motion.dl>
+          </div>
+
+          {/* Right: portrait */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative mx-auto w-full max-w-sm lg:max-w-md"
           >
-            <Download className="w-4 h-4" />
-            Download Resume
-          </Button>
-          <Button
-            asChild
-            variant="outline"
-            className={`${
-              theme === "dark"
-                ? "border-sky-500/50 text-sky-400 hover:bg-sky-500/10"
-                : "border-sky-600/50 text-sky-600 hover:bg-sky-500/10"
-            } px-6 py-2 rounded-full flex items-center gap-2`}
-          >
-            <a href="#contact">Contact Me</a>
-          </Button>
-        </motion.div>
-
-        {/* <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="flex gap-4 mt-8"
-        >
-          {profile?.socialLinks?.map((link, index) => (
-            <SocialIcon key={index} platform={link.platform} url={link.url} />
-          ))}
-        </motion.div> */}
+            <div className="absolute -inset-4 rounded-3xl bg-gradient-to-tr from-brand-500/20 via-transparent to-emerald-500/20 blur-2xl" />
+            <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-white/10 bg-slate-900">
+              <Image
+                src={profile?.image || "/placeholder.svg"}
+                alt={profile?.name || "Profile"}
+                fill
+                className="object-cover"
+                sizes="(max-width: 1024px) 384px, 448px"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+            </div>
+          </motion.div>
+        </div>
       </div>
 
       {/* Scroll indicator */}
-      <motion.div
+      <motion.a
+        href="#about"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center"
+        transition={{ delay: 1.2, duration: 1 }}
+        className="absolute bottom-8 left-1/2 hidden -translate-x-1/2 flex-col items-center text-slate-500 hover:text-brand-400 transition-colors md:flex"
       >
-        <span
-          className={`${
-            theme === "dark" ? "text-slate-400" : "text-slate-500"
-          } text-sm mb-2`}
-        >
-          Scroll to explore
+        <span className="mb-2 font-mono text-xs uppercase tracking-widest">
+          Scroll
         </span>
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
+        <motion.span
+          animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
         >
-          <ChevronDown
-            className={`w-6 h-6 ${
-              theme === "dark" ? "text-sky-400" : "text-sky-600"
-            }`}
-          />
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-}
-
-function SocialIcon({ platform, url }: { platform: string; url: string }) {
-  const { theme } = useTheme();
-
-  return (
-    <motion.a
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.95 }}
-      className={`flex items-center justify-center w-10 h-10 rounded-full ${
-        theme === "dark"
-          ? "bg-slate-800 text-sky-400 hover:bg-sky-500 hover:text-white"
-          : "bg-slate-100 text-sky-600 hover:bg-sky-600 hover:text-white"
-      } transition-all duration-300 shadow-lg`}
-    >
-      <img
-        src={`https://cdn.simpleicons.org/${platform.toLowerCase()}/${
-          theme === "dark" ? "white" : "0ea5e9"
-        }`}
-        alt={platform}
-        className="w-5 h-5"
-        onError={(e) => {
-          // Fallback to default icons if the CDN fails
-          const getDefaultIcon = () => {
-            switch (platform.toLowerCase()) {
-              case "github":
-                return <Github className="w-5 w-5" />;
-              case "linkedin":
-                return <Linkedin className="w-5 w-5" />;
-              case "twitter":
-                return <Twitter className="w-5 w-5" />;
-              default:
-                return <Globe className="w-5 w-5" />;
-            }
-          };
-
-          // Replace the img with the fallback icon
-          const parent = e.currentTarget.parentNode as HTMLElement;
-          if (parent) {
-            parent.innerHTML = "";
-            const iconElement = document.createElement("div");
-            iconElement.innerHTML = getDefaultIcon().toString();
-            parent.appendChild(iconElement);
-          }
-        }}
-      />
-    </motion.a>
+          <ChevronDown className="h-5 w-5" />
+        </motion.span>
+      </motion.a>
+    </section>
   );
 }

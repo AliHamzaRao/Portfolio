@@ -56,30 +56,32 @@ const Education = () => {
   }
 
   return (
-    <section id="education" className="py-24 bg-slate-800">
+    <section id="education" className="py-24 bg-slate-900">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-4"
-          >
-            Education & <span className="text-sky-400">Certifications</span>
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={inView ? { opacity: 1, width: "80px" } : { opacity: 0, width: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-1 bg-sky-400 mx-auto mb-8"
-          />
+        <div className="mb-16 max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-slate-300 max-w-3xl mx-auto text-lg"
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-brand-400"
           >
-            My academic background and professional certifications that have shaped my expertise:
+            05 / Education
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-heading text-3xl font-bold text-white md:text-4xl"
+          >
+            Education & <span className="text-brand-400">Certifications</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-6 text-lg leading-relaxed text-slate-300"
+          >
+            The academic foundation and credentials that shaped my expertise.
           </motion.p>
         </div>
 
@@ -88,29 +90,28 @@ const Education = () => {
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8"
+          className="mx-auto grid max-w-4xl grid-cols-1 gap-6 md:grid-cols-2"
         >
           {education.map((edu) => (
             <motion.div
               key={edu._id}
               variants={itemVariants}
-              className="bg-slate-700 rounded-xl p-6 shadow-lg hover:shadow-sky-500/10 transition-all duration-300 hover:translate-y-[-5px] relative overflow-hidden"
+              className="group relative overflow-hidden rounded-2xl border border-white/5 bg-slate-950/40 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-brand-400/30"
             >
-              <div className="absolute top-0 right-0 w-20 h-20 bg-sky-500/10 rounded-bl-full"></div>
-              <div className="flex items-center mb-4">
-                <div className="p-3 rounded-full bg-sky-500/20 mr-4">
-                  <GraduationCap className="w-6 h-6 text-sky-400" />
+              <div className="mb-4 flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-500/10 ring-1 ring-brand-400/20">
+                  <GraduationCap className="h-6 w-6 text-brand-400" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-white">{edu.degree}</h3>
-                  <p className="text-sky-400">{edu.institution}</p>
+                  <h3 className="font-heading text-lg font-bold text-white">{edu.degree}</h3>
+                  <p className="text-brand-400">{edu.institution}</p>
                 </div>
               </div>
-              <div className="flex items-center text-slate-400 text-sm mb-4">
-                <Calendar className="w-4 h-4 mr-2" />
+              <div className="mb-4 flex items-center font-mono text-xs uppercase tracking-wide text-slate-400">
+                <Calendar className="mr-2 h-4 w-4" />
                 <span>{edu.period}</span>
               </div>
-              {edu.description && <p className="text-slate-300">{edu.description}</p>}
+              {edu.description && <p className="text-sm leading-relaxed text-slate-300">{edu.description}</p>}
             </motion.div>
           ))}
         </motion.div>

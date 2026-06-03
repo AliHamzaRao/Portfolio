@@ -22,6 +22,24 @@ const ProfileSchema = new mongoose.Schema({
   image: {
     type: String,
   },
+  // Hero "Architect" fields
+  availabilityStatus: {
+    type: String,
+    maxlength: [60, "Status cannot be more than 60 characters"],
+    default: "",
+  },
+  metrics: [
+    {
+      label: {
+        type: String,
+        required: [true, "Please provide a metric label"],
+      },
+      value: {
+        type: String,
+        required: [true, "Please provide a metric value"],
+      },
+    },
+  ],
   socialLinks: [
     {
       platform: {

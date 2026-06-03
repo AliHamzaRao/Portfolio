@@ -16,24 +16,23 @@ const Footer = () => {
   }
 
   return (
-    <footer className="bg-slate-900 border-t border-slate-800 py-8">
+    <footer className="border-t border-white/5 bg-slate-950 py-10">
       <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <p className="text-slate-400">
-              &copy; {currentYear} {profile?.name}. All rights reserved.
-            </p>
-          </div>
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <p className="font-mono text-sm text-slate-500">
+            &copy; {currentYear} {profile?.name}. All rights reserved.
+          </p>
 
           <div className="flex items-center gap-4">
-            <p className="text-slate-400 text-sm">Crafted with passion and precision</p>
+            <p className="text-sm text-slate-500">Crafted with passion &amp; precision</p>
             <motion.button
               onClick={scrollToTop}
+              aria-label="Scroll to top"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-full bg-slate-800 text-sky-400 hover:bg-sky-500 hover:text-white transition-colors"
+              className="rounded-full border border-white/10 bg-slate-900 p-2 text-brand-400 transition-colors hover:border-brand-400/40 hover:bg-brand-500/10"
             >
-              <ChevronUp className="w-5 h-5" />
+              <ChevronUp className="h-5 w-5" />
             </motion.button>
           </div>
         </div>

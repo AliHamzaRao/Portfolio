@@ -1,15 +1,33 @@
 import type React from "react"
 import "./globals.css"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Manrope, JetBrains_Mono } from "next/font/google"
 import Providers from "@/components/providers/Providers"
 import { Toaster } from "@/components/ui/toaster"
 
-const inter = Inter({ subsets: ["latin"] })
+// Architect design system fonts
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+})
+const manrope = Manrope({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-manrope",
+  display: "swap",
+})
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-mono",
+  display: "swap",
+})
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "My professional portfolio",
+  title: "Ali Hamza Rao — Senior Frontend Lead & UI Architect",
+  description:
+    "Portfolio of Ali Hamza Rao — architecting scalable, high-performance digital experiences with React, Next.js, and TypeScript.",
 }
 
 export default function RootLayout({
@@ -18,17 +36,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        {/* Add Google Fonts for handwriting/cursive styles */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Great+Vibes&family=Pacifico&family=Satisfy&family=Montserrat:wght@400;500;700&family=Poppins:wght@300;400;500;700&family=Raleway:wght@400;500;700&family=Playfair+Display:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body className={inter.className}>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="font-sans antialiased">
         <Providers>
           {children}
           <Toaster />

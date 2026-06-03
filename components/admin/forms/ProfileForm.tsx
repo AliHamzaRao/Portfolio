@@ -51,10 +51,31 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
     phone: initialData?.phone || "",
     location: initialData?.location || "",
     image: initialData?.image || "",
+    availabilityStatus: initialData?.availabilityStatus || "",
+    metrics: Array.isArray(initialData?.metrics) ? initialData.metrics : [],
     socialLinks: Array.isArray(initialData?.socialLinks)
       ? initialData.socialLinks
       : [],
   });
+
+  const [newMetric, setNewMetric] = useState({ value: "", label: "" });
+
+  const addMetric = () => {
+    if (newMetric.value && newMetric.label) {
+      setFormData({
+        ...formData,
+        metrics: [...formData.metrics, { ...newMetric }],
+      });
+      setNewMetric({ value: "", label: "" });
+    }
+  };
+
+  const removeMetric = (index: number) => {
+    setFormData({
+      ...formData,
+      metrics: formData.metrics.filter((_: any, i: number) => i !== index),
+    });
+  };
 
   const [newSocialLink, setNewSocialLink] = useState<SocialLink>({
     platform: "",
@@ -185,6 +206,24 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
           </div>
 
           <div className="space-y-2">
+            <label htmlFor="availabilityStatus">Availability Status</label>
+            <Input
+              id="availabilityStatus"
+              value={formData.availabilityStatus}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  availabilityStatus: e.target.value,
+                })
+              }
+              placeholder="e.g. Available for new initiatives"
+            />
+            <p className="text-xs text-muted-foreground">
+              Shown as a status pill in the hero. Leave blank to hide it.
+            </p>
+          </div>
+
+          <div className="space-y-2">
             <label htmlFor="aboutMe">About Me Section</label>
             <Textarea
               id="aboutMe"
@@ -230,6 +269,62 @@ export function ProfileForm({ initialData, onSubmit }: ProfileFormProps) {
                 setFormData({ ...formData, location: e.target.value })
               }
             />
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Hero Metrics Card */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Hero Metrics</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">
+            Key stats shown beneath the hero (e.g. value "6+", label "Years of
+            experience").
+          </p>
+          <div className="flex gap-2">
+            <Input
+              placeholder="Value (e.g. 6+)"
+              className="w-[140px]"
+              value={newMetric.value}
+              onChange={(e) =>
+                setNewMetric({ ...newMetric, value: e.target.value })
+              }
+            />
+            <Input
+              placeholder="Label (e.g. Years of experience)"
+              value={newMetric.label}
+              onChange={(e) =>
+                setNewMetric({ ...newMetric, label: e.target.value })
+              }
+            />
+            <Button type="button" onClick={addMetric}>
+              Add
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {formData.metrics.map(
+              (metric: { value: string; label: string }, index: number) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-2 bg-secondary p-2 rounded"
+                >
+                  <span className="font-semibold w-[140px]">
+                    {metric.value}
+                  </span>
+                  <span className="flex-1">{metric.label}</span>
+                  <Button
+                    type="button"
+                    variant="destructive"
+                    size="icon"
+                    onClick={() => removeMetric(index)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )
+            )}
           </div>
         </CardContent>
       </Card>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useInView } from "react-intersection-observer"
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion } from "framer-motion"
 import { Calendar, MapPin } from "lucide-react"
 
 interface ExperienceItem {
@@ -17,13 +17,7 @@ interface ExperienceItem {
 
 const Experience = () => {
   const [experiences, setExperiences] = useState<ExperienceItem[]>([])
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  })
-
-  const { scrollYProgress } = useScroll()
-  const scale = useTransform(scrollYProgress, [0, 1], [0.8, 1])
+  const [ref, inView] = useInView({ triggerOnce: true, threshold: 0.1 })
 
   useEffect(() => {
     const fetchExperiences = async () => {
@@ -44,38 +38,42 @@ const Experience = () => {
   return (
     <section id="experience" className="py-24 bg-slate-900">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-4"
-          >
-            Work <span className="text-sky-400">Experience</span>
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={inView ? { opacity: 1, width: "80px" } : { opacity: 0, width: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-1 bg-sky-400 mx-auto mb-8"
-          />
+        <div className="mb-16 max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-slate-300 max-w-3xl mx-auto text-lg"
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-brand-400"
           >
-            My professional journey has been focused on creating exceptional user experiences and scalable solutions:
+            03 / Experience
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-heading text-3xl font-bold text-white md:text-4xl"
+          >
+            Career <span className="text-brand-400">progression</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-6 text-lg leading-relaxed text-slate-300"
+          >
+            A journey of building exceptional user experiences and scalable systems.
           </motion.p>
         </div>
 
-        <div ref={ref} className="relative max-w-4xl mx-auto">
+        <div ref={ref} className="relative mx-auto max-w-3xl">
           {/* Timeline line */}
-          <div className="absolute left-0 md:left-1/2 transform md:translate-x-[-50%] top-0 bottom-0 w-1 bg-gradient-to-b from-sky-400 to-sky-600"></div>
+          <div className="absolute bottom-0 left-0 top-0 w-px bg-gradient-to-b from-brand-400/60 via-white/10 to-transparent md:left-[7px]" />
 
-          {experiences.map((exp, index) => (
-            <TimelineItem key={exp._id} experience={exp} index={index} inView={inView} />
-          ))}
+          <div className="space-y-10">
+            {experiences.map((exp, index) => (
+              <TimelineItem key={exp._id} experience={exp} index={index} inView={inView} />
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -91,46 +89,41 @@ const TimelineItem = ({
   index: number
   inView: boolean
 }) => {
-  const isEven = index % 2 === 0
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, delay: index * 0.2 }}
-      className={`relative flex flex-col md:flex-row items-center mb-16 ${isEven ? "md:flex-row-reverse" : ""}`}
+      initial={{ opacity: 0, y: 30 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative pl-10"
     >
       {/* Timeline dot */}
-      <div className="absolute left-0 md:left-1/2 transform md:translate-x-[-50%] w-5 h-5 rounded-full bg-sky-500 border-4 border-slate-900 z-10"></div>
+      <span className="absolute left-0 top-1.5 flex h-4 w-4 items-center justify-center rounded-full border-2 border-slate-900 bg-brand-500 shadow-[0_0_0_4px_rgba(14,165,233,0.15)]" />
 
-      {/* Content */}
-      <div className={`w-full md:w-[calc(50%-20px)] ${isEven ? "md:pl-0 md:pr-8" : "md:pl-8 md:pr-0"} pl-8`}>
-        <div className="bg-slate-800 rounded-xl p-6 shadow-lg hover:shadow-sky-500/10 transition-all duration-300">
-          <div className="flex flex-wrap justify-between items-start mb-4">
-            <h3 className="text-xl font-bold text-white">{experience.title}</h3>
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-sky-500/20 text-sky-400">
-              <Calendar className="w-3 h-3 mr-1" />
-              {experience.period}
-            </span>
-          </div>
-
-          <h4 className="text-sky-400 font-semibold mb-2">{experience.company}</h4>
-
-          {experience.location && (
-            <div className="flex items-center text-slate-400 text-sm mb-4">
-              <MapPin className="w-4 h-4 mr-1" />
-              <span>{experience.location}</span>
-            </div>
-          )}
-
-          <p className="text-slate-300">{experience.description}</p>
-
-          {experience.type && (
-            <div className="mt-4 pt-4 border-t border-slate-700">
-              <span className="text-sm text-slate-400">{experience.type}</span>
-            </div>
-          )}
+      <div className="rounded-2xl border border-white/5 bg-slate-950/40 p-6 transition-all duration-300 hover:border-brand-400/30">
+        <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+          <h3 className="font-heading text-xl font-bold text-white">{experience.title}</h3>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-tertiary/10 px-3 py-1 font-mono text-xs text-tertiary ring-1 ring-tertiary/20">
+            <Calendar className="h-3 w-3" />
+            {experience.period}
+          </span>
         </div>
+
+        <h4 className="mb-2 font-semibold text-brand-400">{experience.company}</h4>
+
+        {experience.location && (
+          <div className="mb-4 flex items-center text-sm text-slate-400">
+            <MapPin className="mr-1 h-4 w-4" />
+            <span>{experience.location}</span>
+          </div>
+        )}
+
+        <p className="leading-relaxed text-slate-300">{experience.description}</p>
+
+        {experience.type && (
+          <div className="mt-4 border-t border-white/5 pt-4">
+            <span className="font-mono text-xs uppercase tracking-wide text-slate-500">{experience.type}</span>
+          </div>
+        )}
       </div>
     </motion.div>
   )

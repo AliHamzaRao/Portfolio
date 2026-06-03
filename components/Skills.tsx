@@ -81,48 +81,50 @@ const Skills = () => {
   }
 
   return (
-    <section id="skills" className="py-24 bg-slate-800">
+    <section id="skills" className="py-24 bg-slate-950">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6 }}
-            className="text-3xl md:text-4xl font-bold text-white mb-4"
-          >
-            Technical <span className="text-sky-400">Skills</span>
-          </motion.h2>
-          <motion.div
-            initial={{ opacity: 0, width: 0 }}
-            animate={inView ? { opacity: 1, width: "80px" } : { opacity: 0, width: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="h-1 bg-sky-400 mx-auto mb-8"
-          />
+        <div className="mb-16 max-w-3xl">
           <motion.p
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-slate-300 max-w-3xl mx-auto text-lg"
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.5 }}
+            className="mb-4 font-mono text-sm uppercase tracking-[0.3em] text-brand-400"
           >
-            My toolkit is diverse and ever-expanding. Here are some of the technologies I've mastered over my career:
+            02 / Skills
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-heading text-3xl font-bold text-white md:text-4xl"
+          >
+            Technical <span className="text-brand-400">Arsenal</span>
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mt-6 text-lg leading-relaxed text-slate-300"
+          >
+            A diverse, ever-expanding toolkit — the technologies I reach for to ship robust, scalable products.
           </motion.p>
         </div>
 
-        <div ref={ref} className="mb-12">
+        <div ref={ref}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-4 mb-12"
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="mb-12 flex flex-wrap gap-3"
           >
             {categories.map((category) => (
               <button
                 key={category.name}
                 onClick={() => setActiveCategory(category.name)}
-                className={`px-6 py-3 rounded-full text-sm font-medium transition-all duration-300 ${
+                className={`rounded-full border px-5 py-2.5 font-mono text-xs uppercase tracking-wide transition-all duration-300 ${
                   activeCategory === category.name
-                    ? "bg-sky-500 text-white shadow-lg shadow-sky-500/20"
-                    : "bg-slate-700 text-slate-300 hover:bg-slate-600"
+                    ? "border-brand-400/50 bg-brand-500/15 text-brand-300"
+                    : "border-white/10 bg-slate-900/50 text-slate-400 hover:border-white/20 hover:text-slate-200"
                 }`}
               >
                 {category.name}
@@ -134,7 +136,7 @@ const Skills = () => {
             variants={containerVariants}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
-            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"
+            className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6"
           >
             {categories
               .find((category) => category.name === activeCategory)
@@ -142,9 +144,9 @@ const Skills = () => {
                 <motion.div
                   key={skill._id}
                   variants={itemVariants}
-                  className="bg-slate-700 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-slate-600 transition-all duration-300 hover:shadow-lg hover:shadow-sky-500/10 group"
+                  className="group flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-slate-900/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-brand-400/30"
                 >
-                  <div className="w-16 h-16 relative mb-4 flex items-center justify-center">
+                  <div className="relative mb-4 flex h-14 w-14 items-center justify-center">
                     <Image
                       src={skill.icon || "/placeholder.svg"}
                       alt={skill.name}
@@ -156,7 +158,7 @@ const Skills = () => {
                       }}
                     />
                   </div>
-                  <h3 className="text-white text-center font-medium">{skill.name}</h3>
+                  <h3 className="text-center text-sm font-medium text-slate-200">{skill.name}</h3>
                 </motion.div>
               ))}
           </motion.div>

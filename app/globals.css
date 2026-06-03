@@ -33,6 +33,18 @@
     --ring: 222.2 84% 4.9%;
 
     --radius: 0.5rem;
+
+    /* Architect design-system brand tokens (Stitch) */
+    --brand-secondary: #10b981; /* emerald */
+    --brand-tertiary: #de8712; /* amber */
+    --brand-ink: #0f172a; /* slate-900 */
+
+    /* Themeable accent — RGB channels so Tailwind opacity modifiers work.
+       Defaults to the sky scale; the appearance widget overrides these. */
+    --brand-300: 125 211 252;
+    --brand-400: 56 189 248;
+    --brand-500: 14 165 233;
+    --brand-600: 2 132 199;
   }
 
   .dark {
@@ -77,5 +89,30 @@
 
 html {
   scroll-behavior: smooth;
+  /* Dark-first "Architect" background — prevents white flash before hydration */
+  background-color: var(--brand-ink);
+}
+
+/* Brand selection + accent scrollbar to match the Architect palette */
+::selection {
+  background-color: rgba(14, 165, 233, 0.3);
+  color: #f1f5f9;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Custom cursor: hide the native cursor when enabled by the appearance widget */
+body.custom-cursor,
+body.custom-cursor a,
+body.custom-cursor button,
+body.custom-cursor [role="button"],
+body.custom-cursor input,
+body.custom-cursor textarea,
+body.custom-cursor select {
+  cursor: none;
 }
 

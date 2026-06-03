@@ -13,10 +13,16 @@ interface Profile {
   name: string;
   title: string;
   description: string;
+  aboutMe?: string;
   email: string;
   phone: string;
   location: string;
   image: string;
+  availabilityStatus?: string;
+  metrics?: Array<{
+    label: string;
+    value: string;
+  }>;
   socialLinks: Array<{
     platform: string;
     url: string;

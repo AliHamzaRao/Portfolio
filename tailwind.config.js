@@ -11,12 +11,32 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "ui-sans-serif", "system-ui", "sans-serif"],
+        heading: ["var(--font-manrope)", "var(--font-inter)", "sans-serif"],
+        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        // Architect design-system brand palette (Stitch)
+        // primary #0EA5E9 == sky-500, secondary #10B981 == emerald-500,
+        // neutral #0F172A == slate-900 (use Tailwind defaults for those).
+        tertiary: {
+          DEFAULT: "#DE8712",
+          foreground: "#0F172A",
+        },
+        // Themeable accent (driven by --brand-* RGB channels; defaults to sky).
+        // Supports opacity modifiers e.g. bg-brand-500/10.
+        brand: {
+          300: "rgb(var(--brand-300) / <alpha-value>)",
+          400: "rgb(var(--brand-400) / <alpha-value>)",
+          500: "rgb(var(--brand-500) / <alpha-value>)",
+          600: "rgb(var(--brand-600) / <alpha-value>)",
+        },
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
